@@ -42,10 +42,18 @@ description: 여러 AI 에이전트를 번갈아 쓰는 프로젝트를 위한 �
 
 **역할 분리**
 - `README.md`: 모든 에이전트가 반드시 읽고 그대로 따라야 하는 상세 운영 지침.
-- `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`: 각 에이전트에게 README를 읽고 그대로 따르라고 지시하는 짧은 진입점.
+- `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`: 저장소 루트에 직접 두는 파일이다. 각 에이전트에게 README를 읽고 그대로 따르라고 지시하는 짧은 진입점이다.
 - `.agent/`: 에이전트들이 작업 중 필요로 하는 맥락, 계획, 결정, 진행 상태, 핸드오프를 읽고 쓰는 공용 데이터 폴더. 이 안에는 README를 두지 않는다.
 - `.claude/`, `.codex/`, `.gemini/`: 도구별 필수 설정만 두는 예외 공간. 공통 지침이나 작업 상태를 관리하지 않는다.
 - `cavecrew`: 모든 에이전트가 세션 시작 시 활성화해야 하는 caveman-style 압축 실행 도구.
+
+**에이전트 지침 파일 위치 규칙**
+- `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`는 반드시 저장소 루트에 파일로 만든다.
+- `AGENTS.md/`, `CLAUDE.md/`, `GEMINI.md/`, `agent.md/`, `claude.md/`처럼 같은 이름의 폴더를 만들지 않는다.
+- `agents/AGENTS.md`, `claude/CLAUDE.md`, `.agent/AGENTS.md`처럼 하위 폴더에 넣지 않는다.
+- 파일명은 도구가 자동 인식하는 정확한 대문자 파일명을 우선 사용한다: `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`.
+- 예외는 도구가 공식적으로 폴더 위치를 요구하는 경우뿐이다. 예: Cursor는 `.cursor/rules/`를 쓸 수 있다.
+- 이미 잘못 만들어진 지침 폴더가 있으면 내용을 확인한 뒤 루트 지침 파일로 이관하고, 폴더 삭제 여부는 사용자에게 확인한다.
 
 **부트로더 직접 삽입 예외**
 - 에이전트별 지침 파일은 기본적으로 README를 가리키는 짧은 부트로더로 유지한다.
@@ -58,6 +66,7 @@ description: 여러 AI 에이전트를 번갈아 쓰는 프로젝트를 위한 �
 
 **에이전트 실행 규칙**
 - 작업 시작 시 에이전트는 자기 전용 지침 파일(`AGENTS.md`, `CLAUDE.md`, `GEMINI.md` 등)을 통해 `README.md`를 읽고, README의 상세 지침을 그대로 따른다.
+- 에이전트 지침 파일을 만들 때는 저장소 루트에 정확한 파일명으로 생성한다. 지침 파일용 폴더를 새로 만들지 않는다.
 - 작업 중 필요한 프로젝트 맥락, 현재 계획, 결정 기록, 진행 상태, 핸드오프 정보는 `.agent/`에서 읽는다.
 - 작업 유형이 명확하면 `.agent/` 아래에 작업별 폴더를 만들고 그 안에서 관련 파일을 관리한다. 예: 기획서 작업은 `.agent/planning/` 또는 `.agent/기획서/`.
 - 각 작업별 폴더는 과거, 현재, 미래 정보를 섞지 않도록 `active/`, `cancle/`, `legacy/`, `plan/` 하위 폴더로 상태를 나누어 관리한다.
@@ -133,6 +142,8 @@ description: 여러 AI 에이전트를 번갈아 쓰는 프로젝트를 위한 �
     모든 에이전트는 작업 시작 전에 이 README를 먼저 읽는다.
     에이전트는 이 README의 상세 지침을 그대로 따른다.
     에이전트별 지침 파일은 README로 연결하는 부트로더 역할만 한다.
+    `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`는 저장소 루트에 직접 둔다.
+    에이전트 지침 파일을 넣기 위한 별도 폴더는 만들지 않는다.
 
     ## Shared Agent Workspace
     모든 에이전트가 읽고 쓰는 작업 상태는 `.agent/`에 둔다.
@@ -203,6 +214,7 @@ description: 여러 AI 에이전트를 번갈아 쓰는 프로젝트를 위한 �
 - `AGENTS.md`
 - `CLAUDE.md`
 - `GEMINI.md`
+- 잘못 생성된 지침 폴더: `AGENTS.md/`, `CLAUDE.md/`, `GEMINI.md/`, `agent.md/`, `claude.md/`, `agents/`, `claude/`
 - `.cursor/rules/*`
 - `.agent/*`
 - `.claude/*`
@@ -225,6 +237,7 @@ README에는 에이전트가 실제로 따라야 할 공통 운영 지침을 넣
 - 프로젝트 목적
 - source of truth 원칙
 - README 지침을 그대로 따르라는 규칙
+- `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`를 루트 파일로 만들고 하위 폴더에 넣지 않는 규칙
 - `.agent/`를 공통 읽기/쓰기 작업 공간으로 쓰는 규칙
 - `.agent/` 하위 README를 만들지 않고 루트 README에서 폴더 규칙을 관리하는 규칙
 - 모든 에이전트의 `cavecrew` 설치/활성화 규칙
@@ -244,8 +257,9 @@ README에는 에이전트가 실제로 따라야 할 공통 운영 지침을 넣
 - 최종 응답 형식
 
 **Step 4 — 부트로더 파일 작성 또는 정리**
-각 에이전트별 파일은 README를 읽으라는 짧은 지침만 남긴다.
+각 에이전트별 파일은 저장소 루트에 직접 만들고, README를 읽으라는 짧은 지침만 남긴다.
 긴 지침, 중복 규칙, 프로젝트 정책은 부트로더에 넣지 않는다.
+에이전트 지침 파일을 담기 위한 폴더는 만들지 않는다.
 
 권장 `AGENTS.md`:
 
